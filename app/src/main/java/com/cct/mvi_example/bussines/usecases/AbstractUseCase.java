@@ -15,12 +15,16 @@
 
 package com.cct.mvi_example.bussines.usecases;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.support.annotation.NonNull;
 
 import com.cct.mvi_example.data.Repository;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
 /**
@@ -36,7 +40,6 @@ public abstract class AbstractUseCase<T> {
     protected final Repository repository;
     private final Scheduler subscriberScheduler;
     private final Scheduler observableScheduler;
-    private DisposableObserver<T> disposer;
 
     /**
      * Constructor.
@@ -63,21 +66,13 @@ public abstract class AbstractUseCase<T> {
         this.observableScheduler = observableScheduler;
     }
 
-    protected abstract Observable<T> buildUseCaseObservable();
+    protected abstract Flowable<T> buildUseCaseObservable();
 
-    public void subscribe(DisposableObserver<T> subscriber) {
-        disposer = this.buildUseCaseObservable()
-                .subscribeOn(subscriberScheduler)
-                .observeOn(observableScheduler)
-                .subscribeWith(subscriber);
+    public LiveData<T> executeUseCase() {
+        return LiveDataReactiveStreams.fromPublisher(
+                this.buildUseCaseObservable()
+                        .subscribeOn(subscriberScheduler)
+                        .observeOn(observableScheduler));
     }
-
-
-    public void unsubscribe() {
-        if (!disposer.isDisposed()) {
-            disposer.dispose();
-        }
-    }
-
 }
 

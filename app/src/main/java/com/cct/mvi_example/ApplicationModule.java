@@ -16,14 +16,18 @@
 package com.cct.mvi_example;
 
 import android.app.Application;
+import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 
+import com.cct.mvi_example.bussines.viewmodel.FactoryViewModel;
 import com.cct.mvi_example.data.Repository;
 import com.cct.mvi_example.data.RepositoryImpl;
 import com.cct.mvi_example.data.rest.ApiClient;
 import com.cct.mvi_example.data.rest.utils.LoggingInterceptorFactory;
 import com.cct.mvi_example.data.rest.utils.OkHttpClientFactory;
 import com.cct.mvi_example.data.rest.utils.QueryInterceptorFactory;
+import com.cct.mvi_example.presentation.popularmovies.PopularMoviesComponent;
+import com.cct.mvi_example.presentation.popularmovies.PopularMoviesViewModel;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -111,6 +115,7 @@ public class ApplicationModule {
         return new RepositoryImpl(apiClient);
     }
 
+
     @Provides
     @Named("subscriber")
     @Singleton
@@ -124,5 +129,7 @@ public class ApplicationModule {
     Scheduler provideObserverScheduler() {
         return AndroidSchedulers.mainThread();
     }
+
+
 
 }

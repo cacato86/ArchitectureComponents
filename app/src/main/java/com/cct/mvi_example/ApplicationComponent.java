@@ -21,6 +21,9 @@ import com.cct.mvi_example.data.Repository;
 import com.cct.mvi_example.data.rest.utils.LoggingInterceptorFactory;
 import com.cct.mvi_example.data.rest.utils.OkHttpClientFactory;
 import com.cct.mvi_example.data.rest.utils.QueryInterceptorFactory;
+import com.cct.mvi_example.presentation.popularmovies.PopularMoviesActivity;
+import com.cct.mvi_example.presentation.popularmovies.PopularMoviesComponent;
+import com.cct.mvi_example.presentation.popularmovies.PopularMoviesModule;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -48,5 +51,5 @@ public interface ApplicationComponent {
     @Named("observer")
     Scheduler observer();
 
-    void inject(MainActivity mainActivity);
+    PopularMoviesComponent newPopularMoviesComponent(PopularMoviesModule aplicationModule);
 }

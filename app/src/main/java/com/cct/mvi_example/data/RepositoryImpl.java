@@ -6,6 +6,7 @@ import com.cct.mvi_example.data.rest.ApiClient;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 /**
@@ -21,7 +22,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public Observable<ApiResponse<Movie>> getPopularMovies() {
+    public Flowable<ApiResponse<Movie>> getPopularMovies() {
         return apiClient.getRestAdapter().getArticleDetail("1");
     }
 }

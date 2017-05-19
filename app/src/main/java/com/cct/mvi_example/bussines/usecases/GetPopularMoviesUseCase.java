@@ -10,6 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 
@@ -27,7 +28,7 @@ public class GetPopularMoviesUseCase extends AbstractUseCase<List<Movie>> {
     }
 
     @Override
-    protected Observable<List<Movie>> buildUseCaseObservable() {
+    protected Flowable<List<Movie>> buildUseCaseObservable() {
         return repository.getPopularMovies().map(movieApiResponse -> movieApiResponse.getResults());
     }
 }

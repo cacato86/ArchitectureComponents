@@ -3,6 +3,7 @@ package com.cct.mvi_example.data;
 import com.cct.mvi_example.bussines.model.ApiResponse;
 import com.cct.mvi_example.bussines.model.Movie;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 /**
@@ -10,5 +11,5 @@ import io.reactivex.Observable;
  */
 
 public interface Repository {
-    Observable<ApiResponse<Movie>> getPopularMovies();
+    Flowable<ApiResponse<Movie>> getPopularMovies();
 }

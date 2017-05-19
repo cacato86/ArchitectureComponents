@@ -13,25 +13,17 @@
  * limitations under the License.
  */
 
-package com.cct.mvi_example.data.rest;
+package com.cct.mvi_example.presentation.popularmovies;
 
-import com.cct.mvi_example.bussines.model.ApiResponse;
-import com.cct.mvi_example.bussines.model.Movie;
+import com.cct.mvi_example.ViewModuleScope;
 
-import java.util.List;
+import dagger.Subcomponent;
 
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+@ViewModuleScope
+@Subcomponent(modules = PopularMoviesModule.class )
+public interface PopularMoviesComponent {
 
-/**
- * The interface Api.
- */
-public interface Api {
+    PopularMoviesViewModel popularMoviesVM();
 
-    String ENDPOINT_POPULAR_MOVIES = "/3/movie/popular";
-
-    @GET(ENDPOINT_POPULAR_MOVIES)
-    Flowable<ApiResponse<Movie>> getArticleDetail(@Query("page") String page);
+    void inject(PopularMoviesActivity popularMoviesActivity);
 }
