@@ -22,6 +22,11 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
+
+        maven {
+            name 'glide-snapshot'
+            url 'http://oss.sonatype.org/content/repositories/snapshots'
+        }
     }
 }
 
@@ -46,7 +51,7 @@ ext {
     rxbindingVersion = '2.0.0'
     okHttpVersion = '3.6.0'
     rxandroidVersion = '2.0.1'
-    glideVersion = '3.7.0'
+    glideVersion = '4.0.0-SNAPSHOT'
     dagger2Version = '2.9'
     archLifecycleVersion = "1.0.0-alpha1"
     archRoomVersion = "1.0.0-alpha1"

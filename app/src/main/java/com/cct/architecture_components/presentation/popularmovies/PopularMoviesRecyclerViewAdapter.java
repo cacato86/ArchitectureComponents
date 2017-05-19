@@ -2,19 +2,13 @@ package com.cct.architecture_components.presentation.popularmovies;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.cct.architecture_components.R;
 import com.cct.architecture_components.bussines.model.Movie;
+import com.cct.architecture_components.presentation.customviews.MovieGridView;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by Carlos Carrasco Torres on 18/05/2017.
@@ -22,41 +16,38 @@ import butterknife.ButterKnife;
 
 public class PopularMoviesRecyclerViewAdapter extends RecyclerView.Adapter<PopularMoviesRecyclerViewAdapter.PopularMoviesRecyclerViewHolders> {
 
-    private List<Movie> itemList;
+    private List<Movie> movieList;
     private Context context;
 
-    public PopularMoviesRecyclerViewAdapter(Context context, List<Movie> itemList) {
-        this.itemList = itemList;
+    public PopularMoviesRecyclerViewAdapter(Context context, List<Movie> movieList) {
+        this.movieList = movieList;
         this.context = context;
     }
 
     @Override
     public PopularMoviesRecyclerViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_list_layout, null);
-        PopularMoviesRecyclerViewHolders rcv = new PopularMoviesRecyclerViewHolders(layoutView);
+        MovieGridView movieGridView = new MovieGridView(context);
+        PopularMoviesRecyclerViewHolders rcv = new PopularMoviesRecyclerViewHolders(movieGridView);
         return rcv;
     }
 
     @Override
     public void onBindViewHolder(PopularMoviesRecyclerViewHolders holder, int position) {
-        holder.title.setText(itemList.get(position).getTitle());
-        holder.image.setImageResource(itemList.get(position).getVoteCount());
+        holder.movieView.fillMovie(movieList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return this.itemList.size();
+        return this.movieList.size();
     }
 
     public class PopularMoviesRecyclerViewHolders extends RecyclerView.ViewHolder {
-        @BindView(R.id.title)
-        TextView title;
-        @BindView(R.id.image)
-        ImageView image;
+
+        private final MovieGridView movieView;
+
         public PopularMoviesRecyclerViewHolders(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            movieView = (MovieGridView) itemView;
         }
 
     }

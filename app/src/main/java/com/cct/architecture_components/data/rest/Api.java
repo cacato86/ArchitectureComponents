@@ -27,6 +27,9 @@ import retrofit2.http.Query;
  */
 public interface Api {
 
+    public static String ENDPOINT_IMAGES = "https://image.tmdb.org/t/p/";
+    public static String DEFAULT_SIZE_IMAGES = "w154/";
+
     String ENDPOINT_POPULAR_MOVIES = "/3/movie/popular";
 
     @GET(ENDPOINT_POPULAR_MOVIES)

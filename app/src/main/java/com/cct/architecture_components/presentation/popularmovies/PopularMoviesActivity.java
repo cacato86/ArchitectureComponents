@@ -23,7 +23,7 @@ import butterknife.Unbinder;
 
 public class PopularMoviesActivity extends LifecycleActivity {
 
-    public static final int NUM_COLUMS = 4;
+    public static final int NUM_COLUMS = 2;
 
     @BindView(R.id.recycler)
     RecyclerView recyclerView;
@@ -32,7 +32,6 @@ public class PopularMoviesActivity extends LifecycleActivity {
     ViewModelProvider.Factory factoryViewModel;
 
     private PopularMoviesViewModel viewModel;
-    private Unbinder unbinder;
     private GridLayoutManager gridLayoutManager;
 
     @Override
@@ -41,7 +40,7 @@ public class PopularMoviesActivity extends LifecycleActivity {
         injectDependencies();
         setContentView(R.layout.popular_movies_layout);
         viewModel = ViewModelProviders.of(this, factoryViewModel).get(PopularMoviesViewModel.class);
-        unbinder = ButterKnife.bind(this);
+        ButterKnife.bind(this);
         createRecyclerView();
         getPopularMovies();
     }
