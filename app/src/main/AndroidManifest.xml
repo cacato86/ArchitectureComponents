@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.cct.architecture_components.presentation.popularmovies.PopularMoviesActivity"
+            android:name=".presentation.popularmovies.PopularMoviesActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -22,6 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".presentation.search.SearchActivity"></activity>
     </application>
 
 </manifest>

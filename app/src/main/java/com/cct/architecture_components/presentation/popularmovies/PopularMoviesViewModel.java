@@ -1,6 +1,5 @@
 package com.cct.architecture_components.presentation.popularmovies;
 
-import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;

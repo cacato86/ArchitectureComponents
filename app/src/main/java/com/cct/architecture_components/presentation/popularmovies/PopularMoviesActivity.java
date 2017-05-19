@@ -11,13 +11,14 @@ import android.support.v7.widget.RecyclerView;
 import com.cct.architecture_components.Application;
 import com.cct.architecture_components.R;
 import com.cct.architecture_components.common.EndlessScrollListener;
-
-import java.util.ArrayList;
+import com.cct.architecture_components.common.router.Router;
+import com.cct.architecture_components.common.router.RouterModule;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Carlos Carrasco Torres on 18/05/2017.
@@ -27,11 +28,18 @@ public class PopularMoviesActivity extends LifecycleActivity {
 
     private static final int NUM_COLUMS = 2;
 
+    @Inject
+    ViewModelProvider.Factory factoryViewModel;
+    @Inject
+    Router router;
+
     @BindView(R.id.recycler)
     RecyclerView recyclerView;
 
-    @Inject
-    ViewModelProvider.Factory factoryViewModel;
+    @OnClick(R.id.fab_search)
+    protected void searchClick() {
+        router.routeToSearchActivity();
+    }
 
     private PopularMoviesViewModel viewModel;
     private GridLayoutManager gridLayoutManager;
@@ -41,7 +49,7 @@ public class PopularMoviesActivity extends LifecycleActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         injectDependencies();
-        setContentView(R.layout.popular_movies_layout);
+        setContentView(R.layout.popular_movies_layout_activity);
         viewModel = ViewModelProviders.of(this, factoryViewModel).get(PopularMoviesViewModel.class);
         ButterKnife.bind(this);
         createRecyclerView();
@@ -50,8 +58,9 @@ public class PopularMoviesActivity extends LifecycleActivity {
 
     private void injectDependencies() {
         ((Application) getApplication()).getApplicationComponent()
-                .newPopularMoviesComponent(new PopularMoviesModule())
+                .newPopularMoviesComponent(new PopularMoviesModule(), new RouterModule(this))
                 .inject(this);
+
     }
 
     private void createRecyclerView() {
@@ -59,7 +68,6 @@ public class PopularMoviesActivity extends LifecycleActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayoutManager);
         addEndlessScrollListenerForPagination();
-
     }
 
     private void getPopularMovies() {
@@ -74,7 +82,7 @@ public class PopularMoviesActivity extends LifecycleActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 viewModel.getNextPage(page)
-                        .observe(PopularMoviesActivity.this, movies -> movieAdapter.setProductList(movies));
+                        .observe(PopularMoviesActivity.this, movies -> movieAdapter.setMovietList(movies));
             }
         });
     }

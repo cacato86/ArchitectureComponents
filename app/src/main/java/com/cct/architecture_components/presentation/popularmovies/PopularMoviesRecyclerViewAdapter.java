@@ -10,7 +10,6 @@ import com.cct.architecture_components.bussines.model.Movie;
 import com.cct.architecture_components.presentation.customviews.MovieGridView;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Carlos Carrasco Torres on 18/05/2017.
@@ -26,7 +25,7 @@ public class PopularMoviesRecyclerViewAdapter extends RecyclerView.Adapter<Popul
         this.context = context;
     }
 
-    public void setProductList(final List<? extends Movie> movieList) {
+    public void setMovietList(final List<? extends Movie> movieList) {
         if (movieList == null) {
             mMovieList = movieList;
             notifyItemRangeInserted(0, movieList.size());

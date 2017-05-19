@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.cct.architecture_components.R;
 import com.cct.architecture_components.bussines.model.Movie;
 import com.cct.architecture_components.data.rest.Api;
-import com.github.florent37.glidepalette.BitmapPalette;
 import com.github.florent37.glidepalette.GlidePalette;
 
 import butterknife.BindView;

@@ -7,5 +7,5 @@ import javax.inject.Scope;
  */
 
 @Scope
-public @interface ViewModuleScope {
+public @interface PerActivityScope {
 }
