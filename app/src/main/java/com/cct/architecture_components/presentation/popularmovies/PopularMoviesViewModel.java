@@ -1,6 +1,8 @@
 package com.cct.architecture_components.presentation.popularmovies;
 
+import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.cct.architecture_components.bussines.model.Movie;
@@ -31,6 +33,15 @@ public class PopularMoviesViewModel extends ViewModel {
             movies = getPopularMoviesUseCase.executeUseCase();
         }
         return movies;
+    }
+
+    public LiveData<List<Movie>> getNextPage(int pageNumber) {
+        getPopularMoviesUseCase.addPageNumber(pageNumber);
+        LiveData<List<Movie>> newMovies = getPopularMoviesUseCase.executeUseCase();
+        return Transformations.switchMap(newMovies, input -> {
+            movies.getValue().addAll(input);
+            return movies;
+        });
     }
 
 }

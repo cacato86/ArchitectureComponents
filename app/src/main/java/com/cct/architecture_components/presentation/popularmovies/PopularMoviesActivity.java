@@ -10,12 +10,14 @@ import android.support.v7.widget.RecyclerView;
 
 import com.cct.architecture_components.Application;
 import com.cct.architecture_components.R;
+import com.cct.architecture_components.common.EndlessScrollListener;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by Carlos Carrasco Torres on 18/05/2017.
@@ -23,7 +25,7 @@ import butterknife.Unbinder;
 
 public class PopularMoviesActivity extends LifecycleActivity {
 
-    public static final int NUM_COLUMS = 2;
+    private static final int NUM_COLUMS = 2;
 
     @BindView(R.id.recycler)
     RecyclerView recyclerView;
@@ -33,6 +35,7 @@ public class PopularMoviesActivity extends LifecycleActivity {
 
     private PopularMoviesViewModel viewModel;
     private GridLayoutManager gridLayoutManager;
+    private PopularMoviesRecyclerViewAdapter movieAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,13 +58,24 @@ public class PopularMoviesActivity extends LifecycleActivity {
         gridLayoutManager = new GridLayoutManager(this, NUM_COLUMS);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayoutManager);
+        addEndlessScrollListenerForPagination();
+
     }
 
     private void getPopularMovies() {
         viewModel.getMovies().observe(this, movies -> {
-            PopularMoviesRecyclerViewAdapter rcAdapter =
-                    new PopularMoviesRecyclerViewAdapter(PopularMoviesActivity.this, movies);
-            recyclerView.setAdapter(rcAdapter);
+            movieAdapter = new PopularMoviesRecyclerViewAdapter(PopularMoviesActivity.this, movies);
+            recyclerView.setAdapter(movieAdapter);
+        });
+    }
+
+    private void addEndlessScrollListenerForPagination() {
+        recyclerView.addOnScrollListener(new EndlessScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                viewModel.getNextPage(page)
+                        .observe(PopularMoviesActivity.this, movies -> movieAdapter.setProductList(movies));
+            }
         });
     }
 

@@ -1,8 +1,8 @@
 package com.cct.architecture_components.data;
 
 import com.cct.architecture_components.bussines.model.ApiResponse;
-import com.cct.architecture_components.data.rest.ApiClient;
 import com.cct.architecture_components.bussines.model.Movie;
+import com.cct.architecture_components.data.rest.ApiClient;
 
 import io.reactivex.Flowable;
 
@@ -19,7 +19,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public Flowable<ApiResponse<Movie>> getPopularMovies() {
-        return apiClient.getRestAdapter().getArticleDetail("1");
+    public Flowable<ApiResponse<Movie>> getPopularMovies(Integer pageNumber) {
+        return apiClient.getRestAdapter().getArticleDetail(pageNumber.toString());
     }
 }

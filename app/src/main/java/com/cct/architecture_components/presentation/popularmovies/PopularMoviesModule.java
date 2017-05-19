@@ -18,8 +18,8 @@ package com.cct.architecture_components.presentation.popularmovies;
 import android.arch.lifecycle.ViewModelProvider;
 
 import com.cct.architecture_components.ViewModuleScope;
-import com.cct.architecture_components.bussines.viewmodel.FactoryViewModel;
 import com.cct.architecture_components.bussines.usecases.GetPopularMoviesUseCase;
+import com.cct.architecture_components.bussines.viewmodel.FactoryViewModel;
 
 import dagger.Module;
 import dagger.Provides;

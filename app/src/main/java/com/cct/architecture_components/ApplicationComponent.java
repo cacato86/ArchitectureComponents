@@ -17,9 +17,9 @@ package com.cct.architecture_components;
 
 import android.content.Context;
 
-import com.cct.architecture_components.data.rest.utils.OkHttpClientFactory;
 import com.cct.architecture_components.data.Repository;
 import com.cct.architecture_components.data.rest.utils.LoggingInterceptorFactory;
+import com.cct.architecture_components.data.rest.utils.OkHttpClientFactory;
 import com.cct.architecture_components.data.rest.utils.QueryInterceptorFactory;
 import com.cct.architecture_components.presentation.popularmovies.PopularMoviesComponent;
 import com.cct.architecture_components.presentation.popularmovies.PopularMoviesModule;

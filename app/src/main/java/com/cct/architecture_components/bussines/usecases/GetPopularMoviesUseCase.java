@@ -2,8 +2,8 @@ package com.cct.architecture_components.bussines.usecases;
 
 import android.support.annotation.NonNull;
 
-import com.cct.architecture_components.data.Repository;
 import com.cct.architecture_components.bussines.model.Movie;
+import com.cct.architecture_components.data.Repository;
 
 import java.util.List;
 
@@ -19,6 +19,8 @@ import io.reactivex.Scheduler;
 
 public class GetPopularMoviesUseCase extends AbstractUseCase<List<Movie>> {
 
+    private Integer pageNumber = 1;
+
     @Inject
     public GetPopularMoviesUseCase(@NonNull Repository repository,
                                    @Named("subscriber") @NonNull Scheduler subscriberScheduler,
@@ -26,8 +28,12 @@ public class GetPopularMoviesUseCase extends AbstractUseCase<List<Movie>> {
         super(repository, subscriberScheduler, observableScheduler);
     }
 
+    public void addPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
     @Override
     protected Flowable<List<Movie>> buildUseCaseObservable() {
-        return repository.getPopularMovies().map(movieApiResponse -> movieApiResponse.getResults());
+        return repository.getPopularMovies(pageNumber).map(movieApiResponse -> movieApiResponse.getResults());
     }
 }

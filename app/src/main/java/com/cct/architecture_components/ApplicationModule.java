@@ -19,10 +19,10 @@ import android.app.Application;
 import android.content.Context;
 
 import com.cct.architecture_components.data.Repository;
-import com.cct.architecture_components.data.rest.ApiClient;
-import com.cct.architecture_components.data.rest.utils.OkHttpClientFactory;
 import com.cct.architecture_components.data.RepositoryImpl;
+import com.cct.architecture_components.data.rest.ApiClient;
 import com.cct.architecture_components.data.rest.utils.LoggingInterceptorFactory;
+import com.cct.architecture_components.data.rest.utils.OkHttpClientFactory;
 import com.cct.architecture_components.data.rest.utils.QueryInterceptorFactory;
 
 import javax.inject.Named;

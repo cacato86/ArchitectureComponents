@@ -10,5 +10,5 @@ import io.reactivex.Flowable;
  */
 
 public interface Repository {
-    Flowable<ApiResponse<Movie>> getPopularMovies();
+    Flowable<ApiResponse<Movie>> getPopularMovies(Integer pageNumber);
 }

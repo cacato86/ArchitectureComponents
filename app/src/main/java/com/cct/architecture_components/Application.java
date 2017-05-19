@@ -18,8 +18,6 @@ package com.cct.architecture_components;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-import com.cct.architecture_components.DaggerApplicationComponent;
-
 /**
  * Application base class.
  * BuddyBuild SDK is injected from their builder.
