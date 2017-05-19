@@ -1,4 +1,4 @@
-package com.cct.mvi_example;
+package com.cct.architecture_components;
 
 import org.junit.Test;
 

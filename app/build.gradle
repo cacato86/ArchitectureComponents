@@ -5,7 +5,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
-        applicationId "com.cct.mvi_example"
+        applicationId "com.cct.architecture_components"
         minSdkVersion 15
         targetSdkVersion rootProject.ext.targetSdk
         versionCode 1
