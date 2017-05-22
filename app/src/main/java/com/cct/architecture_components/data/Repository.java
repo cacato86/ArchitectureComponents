@@ -2,6 +2,7 @@ package com.cct.architecture_components.data;
 
 import com.cct.architecture_components.bussines.model.ApiResponse;
 import com.cct.architecture_components.bussines.model.Movie;
+import com.cct.architecture_components.bussines.model.SearchQuery;
 
 import io.reactivex.Flowable;
 
@@ -11,4 +12,6 @@ import io.reactivex.Flowable;
 
 public interface Repository {
     Flowable<ApiResponse<Movie>> getPopularMovies(Integer pageNumber);
+
+    Flowable<ApiResponse<Movie>> getSearch(SearchQuery searchQuery);
 }

@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.cct.architecture_components.Application;
 import com.cct.architecture_components.R;
+import com.cct.architecture_components.bussines.viewmodel.ViewModelModule;
 import com.cct.architecture_components.common.EndlessScrollListener;
 import com.cct.architecture_components.common.router.Router;
 import com.cct.architecture_components.common.router.RouterModule;
@@ -58,7 +59,7 @@ public class PopularMoviesActivity extends LifecycleActivity {
 
     private void injectDependencies() {
         ((Application) getApplication()).getApplicationComponent()
-                .newPopularMoviesComponent(new PopularMoviesModule(), new RouterModule(this))
+                .newPopularMoviesComponent(new ViewModelModule(), new RouterModule(this))
                 .inject(this);
 
     }

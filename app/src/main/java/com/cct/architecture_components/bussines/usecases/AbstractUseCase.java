@@ -7,7 +7,9 @@ import android.support.annotation.NonNull;
 
 import com.cct.architecture_components.data.Repository;
 
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 
 /**
@@ -52,10 +54,13 @@ public abstract class AbstractUseCase<T> {
     protected abstract Flowable<T> buildUseCaseObservable();
 
     public LiveData<T> executeUseCase() {
-        return LiveDataReactiveStreams.fromPublisher(
-                this.buildUseCaseObservable()
-                        .subscribeOn(subscriberScheduler)
-                        .observeOn(observableScheduler));
+        return createLiveData(buildUseCaseObservable());
+    }
+
+    protected LiveData<T> createLiveData(Flowable<T> observable) {
+        return LiveDataReactiveStreams.fromPublisher(observable
+                .subscribeOn(subscriberScheduler)
+                .observeOn(observableScheduler));
     }
 }
 

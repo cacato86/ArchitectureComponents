@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.v4.util.ArrayMap;
 
 import com.cct.architecture_components.presentation.popularmovies.PopularMoviesViewModel;
+import com.cct.architecture_components.presentation.search.SearchViewModel;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -19,9 +20,11 @@ public class FactoryViewModel implements ViewModelProvider.Factory {
     private final ArrayMap<Class, Callable<? extends ViewModel>> creators;
 
     @Inject
-    public FactoryViewModel(PopularMoviesViewModel popularMoviesViewModel) {
+    public FactoryViewModel(PopularMoviesViewModel popularMoviesViewModel,
+                            SearchViewModel searchViewModel) {
         creators = new ArrayMap<>();
         creators.put(PopularMoviesViewModel.class, () -> popularMoviesViewModel);
+        creators.put(SearchViewModel.class, () -> searchViewModel);
     }
 
     @Override

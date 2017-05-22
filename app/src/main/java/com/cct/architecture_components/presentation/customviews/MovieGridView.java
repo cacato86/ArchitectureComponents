@@ -49,7 +49,7 @@ public class MovieGridView extends FrameLayout {
 
     private void init(Context context) {
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        inflate(getContext(), R.layout.movie_list_layout, this);
+        inflate(getContext(), R.layout.movie_grid_layout, this);
         ButterKnife.bind(this);
         this.context = context;
     }
@@ -66,7 +66,7 @@ public class MovieGridView extends FrameLayout {
     }
 
     private String getUrlImage(Movie movie) {
-        return Api.ENDPOINT_IMAGES + Api.DEFAULT_SIZE_IMAGES + movie.getPosterPath();
+        return Api.ENDPOINT_IMAGES + Api.DEFAULT_SIZE_IMAGES_GRID + movie.getPosterPath();
     }
 
 }

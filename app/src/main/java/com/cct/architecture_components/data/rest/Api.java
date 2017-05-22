@@ -13,10 +13,16 @@ import retrofit2.http.Query;
  */
 public interface Api {
 
+    //Wrap using Config request
     String ENDPOINT_IMAGES = "https://image.tmdb.org/t/p/";
-    String DEFAULT_SIZE_IMAGES = "w154/";
+    String DEFAULT_SIZE_IMAGES_GRID = "w154/";
+
     String ENDPOINT_POPULAR_MOVIES = "/3/movie/popular";
+    String ENDPOINT_SEARCH = "/3/search/movie";
 
     @GET(ENDPOINT_POPULAR_MOVIES)
     Flowable<ApiResponse<Movie>> getArticleDetail(@Query("page") String page);
+
+    @GET(ENDPOINT_SEARCH)
+    Flowable<ApiResponse<Movie>> getSearch(@Query("query") String query, @Query("page") String page);
 }
