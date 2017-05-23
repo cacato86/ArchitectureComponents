@@ -5,11 +5,10 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.support.annotation.NonNull;
 
+import com.cct.architecture_components.bussines.model.Resource;
 import com.cct.architecture_components.data.Repository;
 
-import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 
 /**
@@ -51,16 +50,18 @@ public abstract class AbstractUseCase<T> {
         this.observableScheduler = observableScheduler;
     }
 
-    protected abstract Flowable<T> buildUseCaseObservable();
+    protected abstract Flowable<Resource<T>> buildUseCaseObservable();
 
-    public LiveData<T> executeUseCase() {
+    public LiveData<Resource<T>> executeUseCase() {
         return createLiveData(buildUseCaseObservable());
     }
 
-    protected LiveData<T> createLiveData(Flowable<T> observable) {
-        return LiveDataReactiveStreams.fromPublisher(observable
-                .subscribeOn(subscriberScheduler)
-                .observeOn(observableScheduler));
+    protected LiveData<Resource<T>> createLiveData(Flowable<Resource<T>> observable) {
+        return LiveDataReactiveStreams.fromPublisher(observable.subscribeOn(subscriberScheduler)
+                .observeOn(observableScheduler)
+                .startWith(Resource.loading())
+                .onErrorReturn(throwable -> Resource.error(throwable.getLocalizedMessage())));
+
     }
 }
 

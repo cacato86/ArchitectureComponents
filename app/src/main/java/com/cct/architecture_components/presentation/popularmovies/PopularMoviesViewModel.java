@@ -5,6 +5,8 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.cct.architecture_components.bussines.model.Movie;
+import com.cct.architecture_components.bussines.model.Resource;
+import com.cct.architecture_components.bussines.model.Status;
 import com.cct.architecture_components.bussines.usecases.GetPopularMoviesUseCase;
 
 import java.util.List;
@@ -19,7 +21,7 @@ import javax.inject.Singleton;
 @Singleton
 public class PopularMoviesViewModel extends ViewModel {
 
-    private LiveData<List<Movie>> movies;
+    private LiveData<Resource<List<Movie>>> movies;
     private GetPopularMoviesUseCase getPopularMoviesUseCase;
 
     @Inject
@@ -27,18 +29,20 @@ public class PopularMoviesViewModel extends ViewModel {
         this.getPopularMoviesUseCase = getPopularMoviesUseCase;
     }
 
-    public LiveData<List<Movie>> getMovies() {
+    public LiveData<Resource<List<Movie>>> getMovies() {
         if (movies == null) {
             movies = getPopularMoviesUseCase.executeUseCase();
         }
         return movies;
     }
 
-    public LiveData<List<Movie>> getNextPage(int pageNumber) {
+    public LiveData<Resource<List<Movie>>> getNextPage(int pageNumber) {
         getPopularMoviesUseCase.addPageNumber(pageNumber);
-        LiveData<List<Movie>> newMovies = getPopularMoviesUseCase.executeUseCase();
+        LiveData<Resource<List<Movie>>> newMovies = getPopularMoviesUseCase.executeUseCase();
         return Transformations.switchMap(newMovies, input -> {
-            movies.getValue().addAll(input);
+            if (input.status == Status.SUCCESS) {
+                movies.getValue().data.addAll(input.data);
+            }
             return movies;
         });
     }

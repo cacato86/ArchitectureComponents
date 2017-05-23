@@ -3,6 +3,7 @@ package com.cct.architecture_components.bussines.usecases;
 import android.support.annotation.NonNull;
 
 import com.cct.architecture_components.bussines.model.Movie;
+import com.cct.architecture_components.bussines.model.Resource;
 import com.cct.architecture_components.data.Repository;
 
 import java.util.List;
@@ -33,7 +34,8 @@ public class GetPopularMoviesUseCase extends AbstractUseCase<List<Movie>> {
     }
 
     @Override
-    protected Flowable<List<Movie>> buildUseCaseObservable() {
-        return repository.getPopularMovies(pageNumber).map(movieApiResponse -> movieApiResponse.getResults());
+    protected Flowable<Resource<List<Movie>>> buildUseCaseObservable() {
+        return repository.getPopularMovies(pageNumber)
+                .map(movieApiResponse -> Resource.success(movieApiResponse.getResults()));
     }
 }

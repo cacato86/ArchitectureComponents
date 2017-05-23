@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cct.architecture_components.bussines.model.Movie;
-import com.cct.architecture_components.presentation.customviews.MovieGridView;
+import com.cct.architecture_components.presentation.customviews.MovieListView;
 
 import java.util.List;
 
@@ -60,9 +60,14 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
         }
     }
 
+    public void clearItems() {
+        mMovieList.clear();
+        notifyDataSetChanged();
+    }
+
     @Override
     public PopularMoviesRecyclerViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
-        MovieGridView movieListView = new MovieGridView(context);
+        MovieListView movieListView = new MovieListView(context);
         PopularMoviesRecyclerViewHolders rcv = new PopularMoviesRecyclerViewHolders(movieListView);
         return rcv;
     }
@@ -78,11 +83,11 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     }
 
     public class PopularMoviesRecyclerViewHolders extends RecyclerView.ViewHolder {
-        private final MovieGridView movieView;
+        private final MovieListView movieView;
 
         public PopularMoviesRecyclerViewHolders(View itemView) {
             super(itemView);
-            movieView = (MovieGridView) itemView;
+            movieView = (MovieListView) itemView;
         }
     }
 

@@ -15,7 +15,7 @@ public interface Api {
 
     //Wrap using Config request
     String ENDPOINT_IMAGES = "https://image.tmdb.org/t/p/";
-    String DEFAULT_SIZE_IMAGES_GRID = "w154/";
+    String DEFAULT_SIZE_IMAGES_LIST = "w300/";
 
     String ENDPOINT_POPULAR_MOVIES = "/3/movie/popular";
     String ENDPOINT_SEARCH = "/3/search/movie";

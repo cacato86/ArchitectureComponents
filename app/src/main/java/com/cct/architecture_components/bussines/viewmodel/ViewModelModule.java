@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProvider;
 import com.cct.architecture_components.PerActivityScope;
 import com.cct.architecture_components.bussines.usecases.GetPopularMoviesUseCase;
 import com.cct.architecture_components.bussines.usecases.GetSeachUseCase;
-import com.cct.architecture_components.bussines.viewmodel.FactoryViewModel;
 import com.cct.architecture_components.presentation.popularmovies.PopularMoviesViewModel;
 import com.cct.architecture_components.presentation.search.SearchViewModel;
 

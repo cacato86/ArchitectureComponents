@@ -2,8 +2,6 @@
 package com.cct.architecture_components.bussines.viewmodel;
 
 import com.cct.architecture_components.PerActivityScope;
-import com.cct.architecture_components.common.router.Router;
-import com.cct.architecture_components.common.router.RouterModule;
 import com.cct.architecture_components.presentation.popularmovies.PopularMoviesViewModel;
 import com.cct.architecture_components.presentation.search.SearchActivity;
 import com.cct.architecture_components.presentation.search.SearchViewModel;

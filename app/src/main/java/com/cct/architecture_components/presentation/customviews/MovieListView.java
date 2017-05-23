@@ -13,8 +13,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.cct.architecture_components.R;
 import com.cct.architecture_components.bussines.model.Movie;
+import com.cct.architecture_components.common.DataUtils;
 import com.cct.architecture_components.data.rest.Api;
 import com.github.florent37.glidepalette.GlidePalette;
+
+import java.text.ParseException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,33 +26,37 @@ import butterknife.ButterKnife;
  * Created by Carlos Carrasco Torres on 19/05/2017.
  */
 
-public class MovieGridView extends FrameLayout {
+public class MovieListView extends FrameLayout {
 
     @BindView(R.id.title)
     TextView title;
-
     @BindView(R.id.image)
     ImageView image;
+    @BindView(R.id.year)
+    TextView year;
+    @BindView(R.id.overview)
+    TextView overview;
+
     private Context context;
 
-    public MovieGridView(@NonNull Context context) {
+    public MovieListView(@NonNull Context context) {
         super(context);
         init(context);
     }
 
-    public MovieGridView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public MovieListView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public MovieGridView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public MovieListView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     private void init(Context context) {
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        inflate(getContext(), R.layout.movie_grid_layout, this);
+        inflate(getContext(), R.layout.movie_list_layout, this);
         ButterKnife.bind(this);
         this.context = context;
     }
@@ -59,10 +66,19 @@ public class MovieGridView extends FrameLayout {
         Glide.with(context)
                 .load(urlMovie)
                 .listener(GlidePalette.with(urlMovie)
-                        .use(GlidePalette.Profile.MUTED_DARK)
-                        .intoBackground(title, GlidePalette.Swatch.RGB))
+                        .use(GlidePalette.Profile.VIBRANT)
+                        .intoBackground(title)
+                        .intoBackground(overview)
+                        .intoBackground(year)
+                        .intoBackground(image))
                 .into(image);
         title.setText(movie.getTitle());
+        overview.setText(movie.getOverview());
+        try {
+            year.setText(DataUtils.trimYearDate(movie.getReleaseDate()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getUrlImage(Movie movie) {

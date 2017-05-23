@@ -34,7 +34,6 @@ public class ApiClient {
      */
     public Api getRestAdapter() {
         if (client == null) {
-
             Retrofit retrofit = new Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(getGsonConverter())

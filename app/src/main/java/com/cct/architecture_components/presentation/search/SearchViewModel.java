@@ -5,8 +5,9 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.cct.architecture_components.bussines.model.Movie;
+import com.cct.architecture_components.bussines.model.Resource;
 import com.cct.architecture_components.bussines.model.SearchQuery;
-import com.cct.architecture_components.bussines.model.SimpleDisposableObserver;
+import com.cct.architecture_components.bussines.model.Status;
 import com.cct.architecture_components.bussines.usecases.GetSeachUseCase;
 
 import java.util.List;
@@ -23,7 +24,7 @@ import io.reactivex.Observable;
 @Singleton
 public class SearchViewModel extends ViewModel {
 
-    private LiveData<List<Movie>> searchMovies;
+    private LiveData<Resource<List<Movie>>> searchMovies;
     private GetSeachUseCase getSearchUseCase;
 
     private static int INITIAL_PAGE_NUMBER = 1;
@@ -33,7 +34,7 @@ public class SearchViewModel extends ViewModel {
         this.getSearchUseCase = getSearchUseCase;
     }
 
-    public LiveData<List<Movie>> getSearch(Observable<String> searchQueryObs) {
+    public LiveData<Resource<List<Movie>>> getSearch(Observable<String> searchQueryObs) {
         if (searchMovies == null) {
             getSearchUseCase.addParameters(createSeachQuery(searchQueryObs, INITIAL_PAGE_NUMBER));
             searchMovies = getSearchUseCase.executeUseCase();
@@ -41,10 +42,12 @@ public class SearchViewModel extends ViewModel {
         return searchMovies;
     }
 
-    public LiveData<List<Movie>> getNextPage(int pageNumber) {
-        LiveData<List<Movie>> newSearchMovies = getSearchUseCase.getNewPage(pageNumber);
+    public LiveData<Resource<List<Movie>>> getNextPage(int pageNumber) {
+        LiveData<Resource<List<Movie>>> newSearchMovies = getSearchUseCase.getNewPage(pageNumber);
         return Transformations.switchMap(newSearchMovies, input -> {
-            searchMovies.getValue().addAll(input);
+            if (input.status == Status.SUCCESS) {
+                searchMovies.getValue().data.addAll(input.data);
+            }
             return searchMovies;
         });
     }

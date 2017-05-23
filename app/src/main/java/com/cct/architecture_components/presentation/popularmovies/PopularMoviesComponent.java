@@ -5,7 +5,6 @@ import com.cct.architecture_components.PerActivityScope;
 import com.cct.architecture_components.bussines.viewmodel.ViewModelModule;
 import com.cct.architecture_components.common.router.Router;
 import com.cct.architecture_components.common.router.RouterModule;
-import com.cct.architecture_components.presentation.search.SearchActivity;
 
 import dagger.Subcomponent;
 
