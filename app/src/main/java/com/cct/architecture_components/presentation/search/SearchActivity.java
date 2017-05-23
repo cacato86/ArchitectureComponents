@@ -133,7 +133,7 @@ public class SearchActivity extends LifecycleActivity {
     public Observable<String> searchIntent() {
         return RxSearchView.queryTextChanges(searchView)
                 .skip(2)
-                .filter(queryString -> queryString.length() > 3)
+                .filter(queryString -> queryString.length() > 2)
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
                 .map(CharSequence::toString);
