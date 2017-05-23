@@ -60,7 +60,7 @@ public class SearchActivity extends LifecycleActivity {
         viewModel = ViewModelProviders.of(this, factoryViewModel).get(SearchViewModel.class);
         ButterKnife.bind(this);
         createRecyclerView();
-        getSearch();
+        observeSearchIntent();
     }
 
     private void injectDependencies() {
@@ -78,7 +78,7 @@ public class SearchActivity extends LifecycleActivity {
         addEndlessScrollListenerForPagination();
     }
 
-    private void getSearch() {
+    private void observeSearchIntent() {
         viewModel.getSearch(searchIntent()).observe(this, movies -> {
             if (movies.status == Status.LOADING) {
                 setUILoading(movies.message);
@@ -88,7 +88,7 @@ public class SearchActivity extends LifecycleActivity {
                 } else {
                     setUIEmptySearchResult();
                 }
-            } else {
+            } else if (movies.status == Status.ERROR){
                 setUIError(movies.message);
             }
         });
@@ -112,6 +112,9 @@ public class SearchActivity extends LifecycleActivity {
     private void setUIError(String message) {
         hideStatus(false);
         statusText.setText("Error: " + message);
+        searchAdapter.clearItems();
+        //When onError is triggered, rxView is desubscribed, so we need to subscribe other time
+        observeSearchIntent();
     }
 
     private void setUISucces(List<Movie> data) {
@@ -135,7 +138,6 @@ public class SearchActivity extends LifecycleActivity {
                 .skip(2)
                 .filter(queryString -> queryString.length() > 2)
                 .debounce(500, TimeUnit.MILLISECONDS)
-                .distinctUntilChanged()
                 .map(CharSequence::toString);
     }
 }

@@ -20,6 +20,8 @@ import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 /**
@@ -58,8 +60,7 @@ public class GetSeachUseCase extends AbstractUseCase<List<Movie>> {
                         return repository.getSearch(searchQuery)
                                 .map(movieApiResponse -> Resource.success(movieApiResponse.getResults()));
                     }
-                })
-                .startWith(Resource.loading("Write something to search films"));
+                }).startWith(Resource.loading("Write something to search films"));
     }
 
     public LiveData<Resource<List<Movie>>> getNewPage(Integer pageNumber) {

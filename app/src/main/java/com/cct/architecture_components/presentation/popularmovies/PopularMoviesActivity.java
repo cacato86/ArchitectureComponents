@@ -88,7 +88,7 @@ public class PopularMoviesActivity extends LifecycleActivity {
                 setUILoading(movies.message);
             } else if (movies.status == Status.SUCCESS) {
                 setUISucces(movies.data);
-            } else {
+            } else if (movies.status == Status.ERROR) {
                 setUIError(movies.message);
             }
         });

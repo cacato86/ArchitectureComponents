@@ -35,7 +35,7 @@ public class SearchViewModel extends ViewModel {
     }
 
     public LiveData<Resource<List<Movie>>> getSearch(Observable<String> searchQueryObs) {
-        if (searchMovies == null) {
+        if (searchMovies == null ||searchMovies.getValue().status == Status.ERROR) {
             getSearchUseCase.addParameters(createSeachQuery(searchQueryObs, INITIAL_PAGE_NUMBER));
             searchMovies = getSearchUseCase.executeUseCase();
         }
