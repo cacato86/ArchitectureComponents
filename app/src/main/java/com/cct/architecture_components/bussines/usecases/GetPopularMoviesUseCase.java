@@ -36,6 +36,7 @@ public class GetPopularMoviesUseCase extends AbstractUseCase<List<Movie>> {
     @Override
     protected Flowable<Resource<List<Movie>>> buildUseCaseObservable() {
         return repository.getPopularMovies(pageNumber)
-                .map(movieApiResponse -> Resource.success(movieApiResponse.getResults()));
+                .map(movieApiResponse -> Resource.success(movieApiResponse.getResults()))
+                .startWith(Resource.loading("Loading..."));
     }
 }

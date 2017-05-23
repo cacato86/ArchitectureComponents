@@ -58,7 +58,8 @@ public class GetSeachUseCase extends AbstractUseCase<List<Movie>> {
                         return repository.getSearch(searchQuery)
                                 .map(movieApiResponse -> Resource.success(movieApiResponse.getResults()));
                     }
-                });
+                })
+                .startWith(Resource.loading("Write something to search films"));
     }
 
     public LiveData<Resource<List<Movie>>> getNewPage(Integer pageNumber) {

@@ -81,7 +81,7 @@ public class SearchActivity extends LifecycleActivity {
     private void getSearch() {
         viewModel.getSearch(searchIntent()).observe(this, movies -> {
             if (movies.status == Status.LOADING) {
-                setUILoading();
+                setUILoading(movies.message);
             } else if (movies.status == Status.SUCCESS) {
                 if (movies.data.size() > 0) {
                     setUISucces(movies.data);
@@ -104,9 +104,9 @@ public class SearchActivity extends LifecycleActivity {
         });
     }
 
-    private void setUILoading() {
+    private void setUILoading(String message) {
         hideStatus(false);
-        statusText.setText("Loading...");
+        statusText.setText(message);
     }
 
     private void setUIError(String message) {

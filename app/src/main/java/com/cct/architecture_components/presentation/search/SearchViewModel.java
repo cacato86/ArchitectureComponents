@@ -45,7 +45,7 @@ public class SearchViewModel extends ViewModel {
     public LiveData<Resource<List<Movie>>> getNextPage(int pageNumber) {
         LiveData<Resource<List<Movie>>> newSearchMovies = getSearchUseCase.getNewPage(pageNumber);
         return Transformations.switchMap(newSearchMovies, input -> {
-            if (input.status == Status.SUCCESS) {
+            if (input.status == Status.SUCCESS ) {
                 searchMovies.getValue().data.addAll(input.data);
             }
             return searchMovies;

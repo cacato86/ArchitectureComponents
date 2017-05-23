@@ -31,7 +31,7 @@ public class Resource<T> {
         return new Resource<>(ERROR, null, msg);
     }
 
-    public static <T> Resource<T> loading() {
-        return new Resource<>(LOADING, null, null);
+    public static <T> Resource<T> loading(String msg) {
+        return new Resource<>(LOADING, null, msg);
     }
 }

@@ -85,7 +85,7 @@ public class PopularMoviesActivity extends LifecycleActivity {
     private void getPopularMovies() {
         viewModel.getMovies().observe(this, movies -> {
             if (movies.status == Status.LOADING) {
-                setUILoading();
+                setUILoading(movies.message);
             } else if (movies.status == Status.SUCCESS) {
                 setUISucces(movies.data);
             } else {
@@ -104,9 +104,9 @@ public class PopularMoviesActivity extends LifecycleActivity {
         });
     }
 
-    private void setUILoading() {
+    private void setUILoading(String msg) {
         hideStatus(false);
-        statusText.setText("Loading...");
+        statusText.setText(msg);
     }
 
     private void setUISucces(List<Movie> data) {

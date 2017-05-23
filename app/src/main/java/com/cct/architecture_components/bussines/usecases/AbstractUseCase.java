@@ -59,7 +59,6 @@ public abstract class AbstractUseCase<T> {
     protected LiveData<Resource<T>> createLiveData(Flowable<Resource<T>> observable) {
         return LiveDataReactiveStreams.fromPublisher(observable.subscribeOn(subscriberScheduler)
                 .observeOn(observableScheduler)
-                .startWith(Resource.loading())
                 .onErrorReturn(throwable -> Resource.error(throwable.getLocalizedMessage())));
 
     }
