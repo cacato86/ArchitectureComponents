@@ -12,6 +12,7 @@ In this project we can see a MVVM architecture using these components:
 - Repository
 - Builder
 - Interactors
+- Custom Views
 
 # Language
 - Java
