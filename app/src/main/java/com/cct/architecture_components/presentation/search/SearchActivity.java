@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.cct.architecture_components.Application;
 import com.cct.architecture_components.R;
 import com.cct.architecture_components.bussines.model.Movie;
+import com.cct.architecture_components.bussines.model.Resource;
 import com.cct.architecture_components.bussines.model.Status;
 import com.cct.architecture_components.bussines.viewmodel.ViewModelModule;
 import com.cct.architecture_components.common.EndlessScrollListener;
@@ -79,19 +80,21 @@ public class SearchActivity extends LifecycleActivity {
     }
 
     private void observeSearchIntent() {
-        viewModel.getSearch(searchIntent()).observe(this, movies -> {
-            if (movies.status == Status.LOADING) {
-                setUILoading(movies.message);
-            } else if (movies.status == Status.SUCCESS) {
-                if (movies.data.size() > 0) {
-                    setUISucces(movies.data);
-                } else {
-                    setUIEmptySearchResult();
-                }
-            } else if (movies.status == Status.ERROR){
-                setUIError(movies.message);
+        viewModel.getSearch(searchIntent()).observe(this, movies -> renderStatus(movies));
+    }
+
+    private void renderStatus(Resource<List<Movie>> movies) {
+        if (movies.status == Status.LOADING) {
+            setUILoading(movies.message);
+        } else if (movies.status == Status.SUCCESS) {
+            if (movies.data.size() > 0) {
+                setUISucces(movies.data);
+            } else {
+                setUIEmptySearchResult();
             }
-        });
+        } else if (movies.status == Status.ERROR) {
+            setUIError(movies.message);
+        }
     }
 
     private void addEndlessScrollListenerForPagination() {
@@ -99,7 +102,7 @@ public class SearchActivity extends LifecycleActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 viewModel.getNextPage(page).observe(SearchActivity.this,
-                        movies -> setUISucces(movies.data));
+                        movies -> renderStatus(movies));
             }
         });
     }
@@ -123,9 +126,15 @@ public class SearchActivity extends LifecycleActivity {
     }
 
     private void setUIEmptySearchResult() {
-        hideStatus(false);
-        statusText.setText("No results found for your search");
         searchAdapter.clearItems();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                hideStatus(false);
+                statusText.setText("No results found for your search");
+            }
+        });
+
     }
 
     private void hideStatus(boolean hideStatus) {

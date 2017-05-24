@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.cct.architecture_components.Application;
 import com.cct.architecture_components.R;
 import com.cct.architecture_components.bussines.model.Movie;
+import com.cct.architecture_components.bussines.model.Resource;
 import com.cct.architecture_components.bussines.model.Status;
 import com.cct.architecture_components.bussines.viewmodel.ViewModelModule;
 import com.cct.architecture_components.common.EndlessScrollListener;
@@ -83,15 +84,17 @@ public class PopularMoviesActivity extends LifecycleActivity {
     }
 
     private void getPopularMovies() {
-        viewModel.getMovies().observe(this, movies -> {
-            if (movies.status == Status.LOADING) {
-                setUILoading(movies.message);
-            } else if (movies.status == Status.SUCCESS) {
-                setUISucces(movies.data);
-            } else if (movies.status == Status.ERROR) {
-                setUIError(movies.message);
-            }
-        });
+        viewModel.getMovies().observe(this, movies -> renderStatus(movies));
+    }
+
+    private void renderStatus(Resource<List<Movie>> movies) {
+        if (movies.status == Status.LOADING) {
+            setUILoading(movies.message);
+        } else if (movies.status == Status.SUCCESS) {
+            setUISucces(movies.data);
+        } else if (movies.status == Status.ERROR) {
+            setUIError(movies.message);
+        }
     }
 
     private void addEndlessScrollListenerForPagination() {
@@ -99,7 +102,7 @@ public class PopularMoviesActivity extends LifecycleActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 viewModel.getNextPage(page).observe(PopularMoviesActivity.this,
-                        movies -> setUISucces(movies.data));
+                        movies -> renderStatus(movies));
             }
         });
     }

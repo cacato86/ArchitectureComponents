@@ -20,8 +20,6 @@ import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 /**
@@ -30,10 +28,8 @@ import io.reactivex.functions.Function;
 
 public class GetSeachUseCase extends AbstractUseCase<List<Movie>> {
 
-    @NonNull
-    private final Scheduler subscriberScheduler;
-    @NonNull
-    private final Scheduler observableScheduler;
+
+    private static final int INITIAL_PAGE_NUMBER = 1;
     private SearchQuery searchQuery;
 
     @Inject
@@ -41,8 +37,6 @@ public class GetSeachUseCase extends AbstractUseCase<List<Movie>> {
                            @Named("subscriber") @NonNull Scheduler subscriberScheduler,
                            @Named("observer") @NonNull Scheduler observableScheduler) {
         super(repository, subscriberScheduler, observableScheduler);
-        this.subscriberScheduler = subscriberScheduler;
-        this.observableScheduler = observableScheduler;
     }
 
     public void addParameters(SearchQuery searchQuery) {
@@ -57,6 +51,7 @@ public class GetSeachUseCase extends AbstractUseCase<List<Movie>> {
                     @Override
                     public Publisher<Resource<List<Movie>>> apply(String s) throws Exception {
                         searchQuery.setStringQuery(s);
+                        searchQuery.setPageNumber(INITIAL_PAGE_NUMBER);
                         return repository.getSearch(searchQuery)
                                 .map(movieApiResponse -> Resource.success(movieApiResponse.getResults()));
                     }
