@@ -63,7 +63,7 @@ public class PopularMoviesActivity extends LifecycleActivity {
         viewModel = ViewModelProviders.of(this, factoryViewModel).get(PopularMoviesViewModel.class);
         ButterKnife.bind(this);
         createRecyclerView();
-        getPopularMovies();
+        subscribeToViewModel();
     }
 
     private void injectDependencies() {
@@ -81,28 +81,35 @@ public class PopularMoviesActivity extends LifecycleActivity {
         addEndlessScrollListenerForPagination();
     }
 
-    private void getPopularMovies() {
-        viewModel.getMovies().observe(this, movies -> renderStatus(movies));
-    }
-
-    private void renderStatus(Resource<List<Movie>> movies) {
-        if (movies.status == Status.LOADING) {
-            setUILoading(movies.message);
-        } else if (movies.status == Status.SUCCESS) {
-            setUISucces(movies.data);
-        } else if (movies.status == Status.ERROR) {
-            setUIError(movies.message);
-        }
+    private void subscribeToViewModel() {
+        //Subscribe to popular Movies
+        viewModel.getMovies().observe(this, movies -> renderStatus(movies, false));
+        //Subscribe to pagination
+        viewModel.getNextPage().observe(PopularMoviesActivity.this,
+                movies -> renderStatus(movies, true));
     }
 
     private void addEndlessScrollListenerForPagination() {
         recyclerView.addOnScrollListener(new EndlessScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                viewModel.getNextPage(page).observe(PopularMoviesActivity.this,
-                        movies -> renderStatus(movies));
+                viewModel.setPageNumer(page);
             }
         });
+    }
+
+    private void renderStatus(Resource<List<Movie>> movies, boolean addItems) {
+        if (movies.status == Status.LOADING) {
+            setUILoading(movies.message);
+        } else if (movies.status == Status.SUCCESS) {
+            List<Movie> data = movies.data;
+            if (addItems) {
+                data.addAll(0, movieAdapter.getMovieList());
+            }
+            setUISucces(data);
+        } else if (movies.status == Status.ERROR) {
+            setUIError(movies.message);
+        }
     }
 
     private void setUILoading(String msg) {

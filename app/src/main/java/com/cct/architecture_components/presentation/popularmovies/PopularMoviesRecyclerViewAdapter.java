@@ -86,4 +86,7 @@ public class PopularMoviesRecyclerViewAdapter extends RecyclerView.Adapter<Popul
         }
     }
 
+    public List<? extends Movie> getMovieList() {
+        return mMovieList;
+    }
 }

@@ -1,6 +1,8 @@
 package com.cct.architecture_components.presentation.popularmovies;
 
+import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
@@ -21,28 +23,31 @@ import javax.inject.Singleton;
 @Singleton
 public class PopularMoviesViewModel extends ViewModel {
 
+    private final MutableLiveData<Integer> numPage = new MutableLiveData<>();
+    private final LiveData<Resource<List<Movie>>> moviesNextPage;
     private LiveData<Resource<List<Movie>>> movies;
-    private GetPopularMoviesUseCase getPopularMoviesUseCase;
 
     @Inject
     public PopularMoviesViewModel(GetPopularMoviesUseCase getPopularMoviesUseCase) {
-        this.getPopularMoviesUseCase = getPopularMoviesUseCase;
+
         movies = getPopularMoviesUseCase.executeUseCase();
+
+        moviesNextPage = Transformations.switchMap(numPage, input -> {
+            getPopularMoviesUseCase.addPageNumber(input);
+            return getPopularMoviesUseCase.executeUseCase();
+        });
     }
 
     public LiveData<Resource<List<Movie>>> getMovies() {
         return movies;
     }
 
-    public LiveData<Resource<List<Movie>>> getNextPage(int pageNumber) {
-        getPopularMoviesUseCase.addPageNumber(pageNumber);
-        LiveData<Resource<List<Movie>>> newMovies = getPopularMoviesUseCase.executeUseCase();
-        return Transformations.switchMap(newMovies, input -> {
-            if (input.status == Status.SUCCESS) {
-                movies.getValue().data.addAll(input.data);
-            }
-            return movies;
-        });
+    public void setPageNumer(int pageNumber) {
+        numPage.setValue(pageNumber);
+    }
+
+    public LiveData<Resource<List<Movie>>> getNextPage() {
+        return moviesNextPage;
     }
 
 }

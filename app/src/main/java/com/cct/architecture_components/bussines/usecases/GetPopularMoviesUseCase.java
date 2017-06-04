@@ -1,5 +1,6 @@
 package com.cct.architecture_components.bussines.usecases;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.cct.architecture_components.bussines.model.Movie;
@@ -39,4 +40,5 @@ public class GetPopularMoviesUseCase extends AbstractUseCase<List<Movie>> {
                 .map(movieApiResponse -> Resource.success(movieApiResponse.getResults()))
                 .startWith(Resource.loading("Loading..."));
     }
+
 }
