@@ -17,7 +17,6 @@ import com.cct.architecture_components.R;
 import com.cct.architecture_components.bussines.model.Movie;
 import com.cct.architecture_components.bussines.model.Resource;
 import com.cct.architecture_components.bussines.model.Status;
-import com.cct.architecture_components.bussines.viewmodel.ViewModelModule;
 import com.cct.architecture_components.common.EndlessScrollListener;
 import com.jakewharton.rxbinding2.widget.RxSearchView;
 
@@ -65,9 +64,7 @@ public class SearchActivity extends LifecycleActivity {
     }
 
     private void injectDependencies() {
-        ((Application) getApplication()).getApplicationComponent()
-                .newViewModelComponent(new ViewModelModule())
-                .inject(this);
+        ((Application) getApplication()).getApplicationComponent().inject(this);
     }
 
     private void createRecyclerView() {

@@ -27,12 +27,10 @@ public class PopularMoviesViewModel extends ViewModel {
     @Inject
     public PopularMoviesViewModel(GetPopularMoviesUseCase getPopularMoviesUseCase) {
         this.getPopularMoviesUseCase = getPopularMoviesUseCase;
+        movies = getPopularMoviesUseCase.executeUseCase();
     }
 
     public LiveData<Resource<List<Movie>>> getMovies() {
-        if (movies == null) {
-            movies = getPopularMoviesUseCase.executeUseCase();
-        }
         return movies;
     }
 

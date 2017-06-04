@@ -15,7 +15,6 @@ import com.cct.architecture_components.R;
 import com.cct.architecture_components.bussines.model.Movie;
 import com.cct.architecture_components.bussines.model.Resource;
 import com.cct.architecture_components.bussines.model.Status;
-import com.cct.architecture_components.bussines.viewmodel.ViewModelModule;
 import com.cct.architecture_components.common.EndlessScrollListener;
 import com.cct.architecture_components.common.router.Router;
 import com.cct.architecture_components.common.router.RouterModule;
@@ -69,9 +68,8 @@ public class PopularMoviesActivity extends LifecycleActivity {
 
     private void injectDependencies() {
         ((Application) getApplication()).getApplicationComponent()
-                .newPopularMoviesComponent(new ViewModelModule(), new RouterModule(this))
+                .newPopularMoviesComponent(new RouterModule(this))
                 .inject(this);
-
     }
 
     private void createRecyclerView() {

@@ -2,8 +2,11 @@
 package com.cct.architecture_components;
 
 import android.app.Application;
+import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 
+import com.cct.architecture_components.bussines.viewmodel.FactoryViewModel;
+import com.cct.architecture_components.bussines.viewmodel.ViewModelSubComponent;
 import com.cct.architecture_components.data.Repository;
 import com.cct.architecture_components.data.RepositoryImpl;
 import com.cct.architecture_components.data.rest.ApiClient;
@@ -23,60 +26,33 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Dagger module that provides objects which will live during the application lifecycle.
  */
-@Module
+@Module(subcomponents = ViewModelSubComponent.class)
 public class ApplicationModule {
 
     private final Application application;
 
-    /**
-     * Instantiates a new Application module.
-     *
-     * @param application the application
-     */
     public ApplicationModule(Application application) {
         this.application = application;
     }
 
-    /**
-     * Provide application context context.
-     *
-     * @return the context
-     */
     @Provides
     @Singleton
     Context provideApplicationContext() {
         return this.application;
     }
 
-    /**
-     * Provide query interceptor factory query interceptor factory.
-     *
-     * @return the query interceptor factory
-     */
     @Provides
     @Singleton
     QueryInterceptorFactory provideQueryInterceptorFactory() {
         return new QueryInterceptorFactory();
     }
 
-    /**
-     * Provide logging interceptor factory logging interceptor factory.
-     *
-     * @return the logging interceptor factory
-     */
     @Provides
     @Singleton
     LoggingInterceptorFactory provideLoggingInterceptorFactory() {
         return new LoggingInterceptorFactory();
     }
 
-    /**
-     * Provide okhttp client ok http client factory.
-     *
-     * @param queryInterceptor   the query interceptor
-     * @param loggingInterceptor the logging interceptor
-     * @return the ok http client factory
-     */
     @Provides
     @Singleton
     OkHttpClientFactory provideOkhttpClient(QueryInterceptorFactory queryInterceptor,
@@ -112,6 +88,11 @@ public class ApplicationModule {
         return AndroidSchedulers.mainThread();
     }
 
-
+    @Singleton
+    @Provides
+    ViewModelProvider.Factory provideViewModelFactory(
+            ViewModelSubComponent.Builder viewModelSubComponent) {
+        return new FactoryViewModel(viewModelSubComponent.build());
+    }
 
 }

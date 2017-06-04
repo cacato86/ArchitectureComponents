@@ -20,11 +20,10 @@ public class FactoryViewModel implements ViewModelProvider.Factory {
     private final ArrayMap<Class, Callable<? extends ViewModel>> creators;
 
     @Inject
-    public FactoryViewModel(PopularMoviesViewModel popularMoviesViewModel,
-                            SearchViewModel searchViewModel) {
+    public FactoryViewModel(ViewModelSubComponent viewModelSubComponent) {
         creators = new ArrayMap<>();
-        creators.put(PopularMoviesViewModel.class, () -> popularMoviesViewModel);
-        creators.put(SearchViewModel.class, () -> searchViewModel);
+        creators.put(PopularMoviesViewModel.class, () -> viewModelSubComponent.popularMoviesVM());
+        creators.put(SearchViewModel.class, () -> viewModelSubComponent.searchVM());
     }
 
     @Override
