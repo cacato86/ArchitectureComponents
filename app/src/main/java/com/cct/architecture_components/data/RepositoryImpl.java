@@ -2,7 +2,6 @@ package com.cct.architecture_components.data;
 
 import com.cct.architecture_components.bussines.model.ApiResponse;
 import com.cct.architecture_components.bussines.model.Movie;
-import com.cct.architecture_components.bussines.model.SearchQuery;
 import com.cct.architecture_components.data.rest.ApiClient;
 
 import io.reactivex.Flowable;
@@ -25,8 +24,8 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public Flowable<ApiResponse<Movie>> getSearch(SearchQuery searchQuery) {
+    public Flowable<ApiResponse<Movie>> getSearch(String query, Integer pageNumber) {
         return apiClient.getRestAdapter()
-                .getSearch(searchQuery.getStringQuery(), searchQuery.getPageNumber().toString());
+                .getSearch(query, pageNumber.toString());
     }
 }

@@ -13,5 +13,5 @@ import io.reactivex.Flowable;
 public interface Repository {
     Flowable<ApiResponse<Movie>> getPopularMovies(Integer pageNumber);
 
-    Flowable<ApiResponse<Movie>> getSearch(SearchQuery searchQuery);
+    Flowable<ApiResponse<Movie>> getSearch(String query, Integer pageNumber);
 }

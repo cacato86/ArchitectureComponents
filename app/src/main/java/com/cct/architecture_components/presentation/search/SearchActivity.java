@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import com.cct.architecture_components.bussines.model.Movie;
 import com.cct.architecture_components.bussines.model.Resource;
 import com.cct.architecture_components.bussines.model.Status;
 import com.cct.architecture_components.common.EndlessScrollListener;
+import com.cct.architecture_components.presentation.popularmovies.PopularMoviesActivity;
 import com.jakewharton.rxbinding2.widget.RxSearchView;
 
 import java.util.ArrayList;
@@ -77,15 +79,24 @@ public class SearchActivity extends LifecycleActivity {
     }
 
     private void observeSearchIntent() {
-        viewModel.getSearch(searchIntent()).observe(this, movies -> renderStatus(movies));
+        viewModel.setQuery(searchIntent());
+        viewModel.getSearch().observe(this, movies -> {
+            renderStatus(movies, false);
+            Log.e("observeSearchIntent: ", movies.data.size()+" /");
+        });
+        viewModel.getNextPage().observe(this, movies -> renderStatus(movies, true));
     }
 
-    private void renderStatus(Resource<List<Movie>> movies) {
+    private void renderStatus(Resource<List<Movie>> movies, boolean addItems) {
         if (movies.status == Status.LOADING) {
             setUILoading(movies.message);
         } else if (movies.status == Status.SUCCESS) {
             if (movies.data.size() > 0) {
-                setUISucces(movies.data);
+                List<Movie> data = movies.data;
+                if (addItems) {
+                    data.addAll(0, searchAdapter.getMovieList());
+                }
+                setUISucces(data);
             } else {
                 setUIEmptySearchResult();
             }
@@ -98,8 +109,7 @@ public class SearchActivity extends LifecycleActivity {
         recyclerView.addOnScrollListener(new EndlessScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                viewModel.getNextPage(page).observe(SearchActivity.this,
-                        movies -> renderStatus(movies));
+                viewModel.setPageNumer(page);
             }
         });
     }
@@ -113,8 +123,6 @@ public class SearchActivity extends LifecycleActivity {
         hideStatus(false);
         statusText.setText("Error: " + message);
         searchAdapter.clearItems();
-        //When onError is triggered, rxView is desubscribed, so we need to subscribe other time
-        observeSearchIntent();
     }
 
     private void setUISucces(List<Movie> data) {
@@ -124,14 +132,8 @@ public class SearchActivity extends LifecycleActivity {
 
     private void setUIEmptySearchResult() {
         searchAdapter.clearItems();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                hideStatus(false);
-                statusText.setText("No results found for your search");
-            }
-        });
-
+        hideStatus(false);
+        statusText.setText("No results found for your search");
     }
 
     private void hideStatus(boolean hideStatus) {

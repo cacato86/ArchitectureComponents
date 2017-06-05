@@ -91,4 +91,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
         }
     }
 
+    public List<? extends Movie> getMovieList() {
+        return mMovieList;
+    }
 }

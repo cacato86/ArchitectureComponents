@@ -1,14 +1,15 @@
 package com.cct.architecture_components.presentation.search;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.cct.architecture_components.bussines.model.Movie;
 import com.cct.architecture_components.bussines.model.Resource;
-import com.cct.architecture_components.bussines.model.SearchQuery;
-import com.cct.architecture_components.bussines.model.Status;
 import com.cct.architecture_components.bussines.usecases.GetSeachUseCase;
+
+import org.reactivestreams.Publisher;
 
 import java.util.List;
 
@@ -16,6 +17,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+
+import static com.cct.architecture_components.bussines.usecases.GetSeachUseCase.INITIAL_PAGE_NUMBER;
 
 /**
  * Created by Carlos Carrasco Torres on 18/05/2017.
@@ -24,37 +29,41 @@ import io.reactivex.Observable;
 @Singleton
 public class SearchViewModel extends ViewModel {
 
+    private final MutableLiveData<String> searchQuery = new MutableLiveData<>();
+    private final MutableLiveData<Integer> numPage = new MutableLiveData<>();
     private LiveData<Resource<List<Movie>>> searchMovies;
-    private GetSeachUseCase getSearchUseCase;
-
-    private static int INITIAL_PAGE_NUMBER = 1;
+    private LiveData<Resource<List<Movie>>> searchMoviesNextPage;
 
     @Inject
     public SearchViewModel(GetSeachUseCase getSearchUseCase) {
-        this.getSearchUseCase = getSearchUseCase;
-    }
+        searchMovies = Transformations.switchMap(searchQuery, (String input) -> {
+            getSearchUseCase.addPageNumber(INITIAL_PAGE_NUMBER);
+            getSearchUseCase.addSearchQuery(input);
+            return getSearchUseCase.executeUseCase();
+        });
 
-    public LiveData<Resource<List<Movie>>> getSearch(Observable<String> searchQueryObs) {
-        if (searchMovies == null ||searchMovies.getValue().status == Status.ERROR) {
-            getSearchUseCase.addParameters(createSeachQuery(searchQueryObs, INITIAL_PAGE_NUMBER));
-            searchMovies = getSearchUseCase.executeUseCase();
-        }
-        return searchMovies;
-    }
-
-    public LiveData<Resource<List<Movie>>> getNextPage(int pageNumber) {
-        LiveData<Resource<List<Movie>>> newSearchMovies = getSearchUseCase.getNewPage(pageNumber);
-        return Transformations.switchMap(newSearchMovies, input -> {
-            if (input.status == Status.SUCCESS ) {
-                searchMovies.getValue().data.addAll(input.data);
-            }
-            return searchMovies;
+        searchMoviesNextPage = Transformations.switchMap(numPage, (Integer input) -> {
+            getSearchUseCase.addPageNumber(input);
+            return getSearchUseCase.executeUseCase();
         });
     }
 
-    //Kotlin optional parameter :(
-    private SearchQuery createSeachQuery(Observable<String> query, Integer pageNumber) {
-        return new SearchQuery(query, pageNumber);
+    public void setQuery(Observable<String> query) {
+        query.subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(s -> searchQuery.setValue(s));
+    }
+
+    public void setPageNumer(int pageNumber) {
+        numPage.setValue(pageNumber);
+    }
+
+    public LiveData<Resource<List<Movie>>> getSearch() {
+        return searchMovies;
+    }
+
+    public LiveData<Resource<List<Movie>>> getNextPage() {
+        return searchMoviesNextPage;
     }
 
 }

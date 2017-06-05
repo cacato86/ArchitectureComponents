@@ -85,8 +85,7 @@ public class PopularMoviesActivity extends LifecycleActivity {
         //Subscribe to popular Movies
         viewModel.getMovies().observe(this, movies -> renderStatus(movies, false));
         //Subscribe to pagination
-        viewModel.getNextPage().observe(PopularMoviesActivity.this,
-                movies -> renderStatus(movies, true));
+        viewModel.getNextPage().observe(this, movies -> renderStatus(movies, true));
     }
 
     private void addEndlessScrollListenerForPagination() {

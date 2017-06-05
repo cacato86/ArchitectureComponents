@@ -28,9 +28,9 @@ import io.reactivex.functions.Function;
 
 public class GetSeachUseCase extends AbstractUseCase<List<Movie>> {
 
-
-    private static final int INITIAL_PAGE_NUMBER = 1;
-    private SearchQuery searchQuery;
+    public static final int INITIAL_PAGE_NUMBER = 1;
+    private Integer pageNumber;
+    private String searchQuery;
 
     @Inject
     public GetSeachUseCase(@NonNull Repository repository,
@@ -39,33 +39,17 @@ public class GetSeachUseCase extends AbstractUseCase<List<Movie>> {
         super(repository, subscriberScheduler, observableScheduler);
     }
 
-    public void addParameters(SearchQuery searchQuery) {
+    public void addSearchQuery(String searchQuery) {
         this.searchQuery = searchQuery;
     }
 
-    //switchMap - uses the last emited value from the observable - use last call and show ONLY last results
+    public void addPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
     @Override
     protected Flowable<Resource<List<Movie>>> buildUseCaseObservable() {
-        return covertObservableToFlowable(searchQuery.getQuery())
-                .switchMap(new Function<String, Publisher<Resource<List<Movie>>>>() {
-                    @Override
-                    public Publisher<Resource<List<Movie>>> apply(String s) throws Exception {
-                        searchQuery.setStringQuery(s);
-                        searchQuery.setPageNumber(INITIAL_PAGE_NUMBER);
-                        return repository.getSearch(searchQuery)
-                                .map(movieApiResponse -> Resource.success(movieApiResponse.getResults()));
-                    }
-                }).startWith(Resource.loading("Write something to search films"));
-    }
-
-    public LiveData<Resource<List<Movie>>> getNewPage(Integer pageNumber) {
-        searchQuery.setPageNumber(pageNumber);
-        return createLiveData(repository.getSearch(searchQuery)
-                .map(movieApiResponse -> Resource.success(movieApiResponse.getResults())));
-    }
-
-    protected Flowable<String> covertObservableToFlowable(Observable<String> observable) {
-        return observable.toFlowable(BackpressureStrategy.BUFFER)
-                .subscribeOn(AndroidSchedulers.mainThread());
+        return repository.getSearch(searchQuery, pageNumber)
+                .map(movieApiResponse -> Resource.success(movieApiResponse.getResults()));
     }
 }
