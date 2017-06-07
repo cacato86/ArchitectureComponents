@@ -83,9 +83,9 @@ public class PopularMoviesActivity extends LifecycleActivity {
 
     private void subscribeToViewModel() {
         //Subscribe to popular Movies
-        viewModel.getMovies().observe(this, movies -> renderStatus(movies, false));
+        viewModel.getMovies().observe(this, movies -> renderStatus(movies));
         //Subscribe to pagination
-        viewModel.getNextPage().observe(this, movies -> renderStatus(movies, true));
+        viewModel.getNextPage().observe(this, movies -> renderStatusPagination(movies));
     }
 
     private void addEndlessScrollListenerForPagination() {
@@ -97,15 +97,24 @@ public class PopularMoviesActivity extends LifecycleActivity {
         });
     }
 
-    private void renderStatus(Resource<List<Movie>> movies, boolean addItems) {
+    private void renderStatus(Resource<List<Movie>> movies) {
         if (movies.status == Status.LOADING) {
             setUILoading(movies.message);
         } else if (movies.status == Status.SUCCESS) {
             List<Movie> data = movies.data;
-            if (addItems) {
-                data.addAll(0, movieAdapter.getMovieList());
-            }
             setUISucces(data);
+        } else if (movies.status == Status.ERROR) {
+            setUIError(movies.message);
+        }
+    }
+
+    private void renderStatusPagination(Resource<List<Movie>> movies) {
+        if (movies.status == Status.LOADING) {
+            //TODO spinner in bot if needed
+            //setUILoading(movies.message);
+        } else if (movies.status == Status.SUCCESS) {
+            movies.data.addAll(0, movieAdapter.getMovieList());
+            setUISucces(movies.data);
         } else if (movies.status == Status.ERROR) {
             setUIError(movies.message);
         }

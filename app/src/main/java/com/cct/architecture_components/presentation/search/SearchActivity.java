@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -19,7 +18,6 @@ import com.cct.architecture_components.bussines.model.Movie;
 import com.cct.architecture_components.bussines.model.Resource;
 import com.cct.architecture_components.bussines.model.Status;
 import com.cct.architecture_components.common.EndlessScrollListener;
-import com.cct.architecture_components.presentation.popularmovies.PopularMoviesActivity;
 import com.jakewharton.rxbinding2.widget.RxSearchView;
 
 import java.util.ArrayList;
@@ -54,6 +52,15 @@ public class SearchActivity extends LifecycleActivity {
     private LinearLayoutManager gridLayoutManager;
     private SearchRecyclerViewAdapter searchAdapter;
 
+    // The search is only triggered when the user put more than 2 letters and stop typing 500 ms
+    public Observable<String> searchIntent() {
+        return RxSearchView.queryTextChanges(searchView)
+                .skip(2)
+                .filter(queryString -> queryString.length() > 2)
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .map(CharSequence::toString);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,26 +87,31 @@ public class SearchActivity extends LifecycleActivity {
 
     private void observeSearchIntent() {
         viewModel.setQuery(searchIntent());
-        viewModel.getSearch().observe(this, movies -> {
-            renderStatus(movies, false);
-            Log.e("observeSearchIntent: ", movies.data.size()+" /");
-        });
-        viewModel.getNextPage().observe(this, movies -> renderStatus(movies, true));
+        viewModel.getSearch().observe(this, movies -> renderStatusSearch(movies));
+        viewModel.getNextPage().observe(this, movies -> renderStatusPagination(movies));
     }
 
-    private void renderStatus(Resource<List<Movie>> movies, boolean addItems) {
+    private void renderStatusSearch(Resource<List<Movie>> movies) {
         if (movies.status == Status.LOADING) {
             setUILoading(movies.message);
         } else if (movies.status == Status.SUCCESS) {
             if (movies.data.size() > 0) {
-                List<Movie> data = movies.data;
-                if (addItems) {
-                    data.addAll(0, searchAdapter.getMovieList());
-                }
-                setUISucces(data);
+                setUISucces(movies.data);
             } else {
                 setUIEmptySearchResult();
             }
+        } else if (movies.status == Status.ERROR) {
+            setUIError(movies.message);
+        }
+    }
+
+    private void renderStatusPagination(Resource<List<Movie>> movies) {
+        if (movies.status == Status.LOADING) {
+            //TODO spinner in bot if needed
+            //setUILoading(movies.message);
+        } else if (movies.status == Status.SUCCESS) {
+            movies.data.addAll(0, searchAdapter.getMovieList());
+            setUISucces(movies.data);
         } else if (movies.status == Status.ERROR) {
             setUIError(movies.message);
         }
@@ -138,14 +150,5 @@ public class SearchActivity extends LifecycleActivity {
 
     private void hideStatus(boolean hideStatus) {
         statusText.setVisibility(hideStatus ? View.GONE : View.VISIBLE);
-    }
-
-    // The search is only triggered when the user put more than 2 letters and stop typing 500 ms
-    public Observable<String> searchIntent() {
-        return RxSearchView.queryTextChanges(searchView)
-                .skip(2)
-                .filter(queryString -> queryString.length() > 2)
-                .debounce(500, TimeUnit.MILLISECONDS)
-                .map(CharSequence::toString);
     }
 }
