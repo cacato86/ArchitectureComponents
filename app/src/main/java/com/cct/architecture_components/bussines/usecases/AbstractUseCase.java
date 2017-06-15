@@ -5,8 +5,12 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.support.annotation.NonNull;
 
+import com.cct.architecture_components.bussines.model.Movie;
 import com.cct.architecture_components.bussines.model.Resource;
+import com.cct.architecture_components.bussines.model.ResourceComplez;
 import com.cct.architecture_components.data.Repository;
+
+import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Scheduler;
@@ -50,16 +54,16 @@ public abstract class AbstractUseCase<T> {
         this.observableScheduler = observableScheduler;
     }
 
-    protected abstract Flowable<Resource<T>> buildUseCaseObservable();
+    protected abstract Flowable<ResourceComplez<T>> buildUseCaseObservable();
 
-    public LiveData<Resource<T>> executeUseCase() {
+    public LiveData<ResourceComplez<T>> executeUseCase() {
         return createLiveData(buildUseCaseObservable());
     }
 
-    protected LiveData<Resource<T>> createLiveData(Flowable<Resource<T>> observable) {
+    protected LiveData<ResourceComplez<T>> createLiveData(Flowable<ResourceComplez<T>> observable) {
         return LiveDataReactiveStreams.fromPublisher(observable.subscribeOn(subscriberScheduler)
-                .observeOn(observableScheduler)
-                .onErrorReturn(throwable -> Resource.error(throwable.getLocalizedMessage())));
+                .observeOn(observableScheduler));
+                //.onErrorReturn(throwable -> Resource.error(throwable.getLocalizedMessage())));
 
     }
 }

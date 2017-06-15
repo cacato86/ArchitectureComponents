@@ -14,6 +14,7 @@ import com.cct.architecture_components.Application;
 import com.cct.architecture_components.R;
 import com.cct.architecture_components.bussines.model.Movie;
 import com.cct.architecture_components.bussines.model.Resource;
+import com.cct.architecture_components.bussines.model.ResourceComplez;
 import com.cct.architecture_components.bussines.model.Status;
 import com.cct.architecture_components.common.EndlessScrollListener;
 import com.cct.architecture_components.common.router.Router;
@@ -97,9 +98,14 @@ public class PopularMoviesActivity extends LifecycleActivity {
         });
     }
 
-    private void renderStatus(Resource<List<Movie>> movies) {
+    private void renderStatus(ResourceComplez<List<Movie>> movies) {
         if (movies.status == Status.LOADING) {
-            setUILoading(movies.message);
+            List<Movie> data = movies.data;
+            if (data != null && data.size() > 0) {
+                setUISucces(data);
+            } else {
+                setUILoading("Loading ...");
+            }
         } else if (movies.status == Status.SUCCESS) {
             List<Movie> data = movies.data;
             setUISucces(data);
@@ -108,10 +114,14 @@ public class PopularMoviesActivity extends LifecycleActivity {
         }
     }
 
-    private void renderStatusPagination(Resource<List<Movie>> movies) {
+    private void renderStatusPagination(ResourceComplez<List<Movie>> movies) {
         if (movies.status == Status.LOADING) {
-            //TODO spinner in bot if needed
-            //setUILoading(movies.message);
+            List<Movie> data = movies.data;
+            if (data != null && data.size() > 0){
+                setUISucces(data);
+            }else{
+                setUILoading("Loading ...");
+            }
         } else if (movies.status == Status.SUCCESS) {
             movies.data.addAll(0, movieAdapter.getMovieList());
             setUISucces(movies.data);

@@ -8,6 +8,7 @@ import android.arch.lifecycle.ViewModel;
 
 import com.cct.architecture_components.bussines.model.Movie;
 import com.cct.architecture_components.bussines.model.Resource;
+import com.cct.architecture_components.bussines.model.ResourceComplez;
 import com.cct.architecture_components.bussines.model.Status;
 import com.cct.architecture_components.bussines.usecases.GetPopularMoviesUseCase;
 
@@ -24,8 +25,8 @@ import javax.inject.Singleton;
 public class PopularMoviesViewModel extends ViewModel {
 
     private final MutableLiveData<Integer> numPage = new MutableLiveData<>();
-    private final LiveData<Resource<List<Movie>>> moviesNextPage;
-    private LiveData<Resource<List<Movie>>> movies;
+    private final LiveData<ResourceComplez<List<Movie>>> moviesNextPage;
+    private LiveData<ResourceComplez<List<Movie>>> movies;
 
     @Inject
     public PopularMoviesViewModel(GetPopularMoviesUseCase getPopularMoviesUseCase) {
@@ -38,7 +39,7 @@ public class PopularMoviesViewModel extends ViewModel {
         });
     }
 
-    public LiveData<Resource<List<Movie>>> getMovies() {
+    public LiveData<ResourceComplez<List<Movie>>> getMovies() {
         return movies;
     }
 
@@ -46,7 +47,7 @@ public class PopularMoviesViewModel extends ViewModel {
         numPage.setValue(pageNumber);
     }
 
-    public LiveData<Resource<List<Movie>>> getNextPage() {
+    public LiveData<ResourceComplez<List<Movie>>> getNextPage() {
         return moviesNextPage;
     }
 

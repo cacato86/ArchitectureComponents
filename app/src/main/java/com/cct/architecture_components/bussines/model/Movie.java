@@ -1,5 +1,7 @@
 package com.cct.architecture_components.bussines.model;
 
+import android.arch.persistence.room.Entity;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,6 +11,7 @@ import java.util.List;
  * Created by Carlos Carrasco Torres on 17/05/2017.
  */
 
+@Entity(primaryKeys = "id")
 public class Movie {
     @SerializedName("poster_path")
     @Expose
@@ -22,9 +25,6 @@ public class Movie {
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
-    @SerializedName("genre_ids")
-    @Expose
-    private List<Integer> genreIds = null;
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -83,14 +83,6 @@ public class Movie {
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
-    }
-
-    public List<Integer> getGenreIds() {
-        return genreIds;
-    }
-
-    public void setGenreIds(List<Integer> genreIds) {
-        this.genreIds = genreIds;
     }
 
     public Integer getId() {
@@ -172,7 +164,6 @@ public class Movie {
                 ", adult=" + adult +
                 ", overview='" + overview + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
-                ", genreIds=" + genreIds +
                 ", id=" + id +
                 ", originalTitle='" + originalTitle + '\'' +
                 ", originalLanguage='" + originalLanguage + '\'' +
@@ -199,8 +190,6 @@ public class Movie {
             return false;
         if (releaseDate != null ? !releaseDate.equals(movie.releaseDate) : movie.releaseDate != null)
             return false;
-        if (genreIds != null ? !genreIds.equals(movie.genreIds) : movie.genreIds != null)
-            return false;
         if (id != null ? !id.equals(movie.id) : movie.id != null) return false;
         if (originalTitle != null ? !originalTitle.equals(movie.originalTitle) : movie.originalTitle != null)
             return false;
@@ -224,7 +213,6 @@ public class Movie {
         result = 31 * result + (adult != null ? adult.hashCode() : 0);
         result = 31 * result + (overview != null ? overview.hashCode() : 0);
         result = 31 * result + (releaseDate != null ? releaseDate.hashCode() : 0);
-        result = 31 * result + (genreIds != null ? genreIds.hashCode() : 0);
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (originalTitle != null ? originalTitle.hashCode() : 0);
         result = 31 * result + (originalLanguage != null ? originalLanguage.hashCode() : 0);

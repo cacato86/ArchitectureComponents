@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+a
+
     <application
         android:name="com.cct.architecture_components.Application"
         android:allowBackup="true"

@@ -51,6 +51,7 @@ dependencies {
     compile 'android.arch.lifecycle:reactivestreams:' + rootProject.ext.archLifecycleVersion
     annotationProcessor 'android.arch.lifecycle:compiler:' + rootProject.ext.archLifecycleVersion
     compile 'android.arch.persistence.room:runtime:' + rootProject.ext.archLifecycleVersion
+    compile 'android.arch.persistence.room:rxjava2:' + rootProject.ext.archLifecycleVersion
     annotationProcessor 'android.arch.persistence.room:compiler:' + rootProject.ext.archLifecycleVersion
 
     compile 'io.reactivex.rxjava2:rxandroid:' + rootProject.ext.rxandroidVersion
@@ -70,4 +71,6 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-android:' + rootProject.ext.mockitoVersion
+
+    debugCompile 'com.amitshekhar.android:debug-db:1.0.0'
 }

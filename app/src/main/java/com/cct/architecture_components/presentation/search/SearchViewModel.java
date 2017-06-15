@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModel;
 
 import com.cct.architecture_components.bussines.model.Movie;
 import com.cct.architecture_components.bussines.model.Resource;
+import com.cct.architecture_components.bussines.model.ResourceComplez;
 import com.cct.architecture_components.bussines.usecases.GetSeachUseCase;
 
 import org.reactivestreams.Publisher;
@@ -31,8 +32,8 @@ public class SearchViewModel extends ViewModel {
 
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>();
     private final MutableLiveData<Integer> numPage = new MutableLiveData<>();
-    private LiveData<Resource<List<Movie>>> searchMovies;
-    private LiveData<Resource<List<Movie>>> searchMoviesNextPage;
+    private LiveData<ResourceComplez<List<Movie>>> searchMovies;
+    private LiveData<ResourceComplez<List<Movie>>> searchMoviesNextPage;
 
     @Inject
     public SearchViewModel(GetSeachUseCase getSearchUseCase) {
@@ -58,11 +59,11 @@ public class SearchViewModel extends ViewModel {
         numPage.setValue(pageNumber);
     }
 
-    public LiveData<Resource<List<Movie>>> getSearch() {
+    public LiveData<ResourceComplez<List<Movie>>> getSearch() {
         return searchMovies;
     }
 
-    public LiveData<Resource<List<Movie>>> getNextPage() {
+    public LiveData<ResourceComplez<List<Movie>>> getNextPage() {
         return searchMoviesNextPage;
     }
 

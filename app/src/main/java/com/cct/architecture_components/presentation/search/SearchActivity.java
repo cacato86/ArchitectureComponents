@@ -16,6 +16,7 @@ import com.cct.architecture_components.Application;
 import com.cct.architecture_components.R;
 import com.cct.architecture_components.bussines.model.Movie;
 import com.cct.architecture_components.bussines.model.Resource;
+import com.cct.architecture_components.bussines.model.ResourceComplez;
 import com.cct.architecture_components.bussines.model.Status;
 import com.cct.architecture_components.common.EndlessScrollListener;
 import com.jakewharton.rxbinding2.widget.RxSearchView;
@@ -91,7 +92,7 @@ public class SearchActivity extends LifecycleActivity {
         viewModel.getNextPage().observe(this, movies -> renderStatusPagination(movies));
     }
 
-    private void renderStatusSearch(Resource<List<Movie>> movies) {
+    private void renderStatusSearch(ResourceComplez<List<Movie>> movies) {
         if (movies.status == Status.LOADING) {
             setUILoading(movies.message);
         } else if (movies.status == Status.SUCCESS) {
@@ -105,7 +106,7 @@ public class SearchActivity extends LifecycleActivity {
         }
     }
 
-    private void renderStatusPagination(Resource<List<Movie>> movies) {
+    private void renderStatusPagination(ResourceComplez<List<Movie>> movies) {
         if (movies.status == Status.LOADING) {
             //TODO spinner in bot if needed
             //setUILoading(movies.message);

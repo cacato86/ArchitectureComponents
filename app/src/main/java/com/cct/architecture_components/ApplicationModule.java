@@ -3,12 +3,14 @@ package com.cct.architecture_components;
 
 import android.app.Application;
 import android.arch.lifecycle.ViewModelProvider;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 
 import com.cct.architecture_components.bussines.viewmodel.FactoryViewModel;
 import com.cct.architecture_components.bussines.viewmodel.ViewModelSubComponent;
 import com.cct.architecture_components.data.Repository;
 import com.cct.architecture_components.data.RepositoryImpl;
+import com.cct.architecture_components.data.db.DataBase;
 import com.cct.architecture_components.data.rest.ApiClient;
 import com.cct.architecture_components.data.rest.utils.LoggingInterceptorFactory;
 import com.cct.architecture_components.data.rest.utils.OkHttpClientFactory;
@@ -29,6 +31,7 @@ import io.reactivex.schedulers.Schedulers;
 @Module(subcomponents = ViewModelSubComponent.class)
 public class ApplicationModule {
 
+    public static final String DATABASE_NAME = "database.db";
     private final Application application;
 
     public ApplicationModule(Application application) {
@@ -69,8 +72,14 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    Repository provideRepository(ApiClient apiClient) {
-        return new RepositoryImpl(apiClient);
+    DataBase provideDb() {
+        return Room.databaseBuilder(application, DataBase.class, DATABASE_NAME).build();
+    }
+
+    @Provides
+    @Singleton
+    Repository provideRepository(ApiClient apiClient, DataBase dataBase) {
+        return new RepositoryImpl(apiClient, dataBase);
     }
 
 

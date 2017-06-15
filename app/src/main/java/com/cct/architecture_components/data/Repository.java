@@ -2,7 +2,10 @@ package com.cct.architecture_components.data;
 
 import com.cct.architecture_components.bussines.model.ApiResponse;
 import com.cct.architecture_components.bussines.model.Movie;
+import com.cct.architecture_components.bussines.model.ResourceComplez;
 import com.cct.architecture_components.bussines.model.SearchQuery;
+
+import java.util.List;
 
 import io.reactivex.Flowable;
 
@@ -11,7 +14,7 @@ import io.reactivex.Flowable;
  */
 
 public interface Repository {
-    Flowable<ApiResponse<Movie>> getPopularMovies(Integer pageNumber);
+    Flowable<ResourceComplez<List<Movie>>> getPopularMovies(Integer pageNumber);
 
-    Flowable<ApiResponse<Movie>> getSearch(String query, Integer pageNumber);
+    Flowable<ApiResponse<List<Movie>>> getSearch(String query, Integer pageNumber);
 }
